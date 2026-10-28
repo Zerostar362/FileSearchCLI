@@ -69,6 +69,7 @@ public sealed class SqliteDatabaseService
 
         File.Delete(_databasePath + "-wal");
         File.Delete(_databasePath + "-shm");
+        File.Delete(_databasePath + "-journal");
         File.Delete(_databasePath);
 
         return databaseExists;

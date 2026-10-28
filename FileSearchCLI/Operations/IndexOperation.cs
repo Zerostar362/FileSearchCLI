@@ -1,11 +1,6 @@
 ﻿using FileSearchCLI.Interface;
-using FileSearchCLI.Models;
 using FileSearchCLI.Services;
-using Microsoft.VisualBasic.FileIO;
-using System;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace FileSearchCLI.Operations
 {
@@ -15,6 +10,8 @@ namespace FileSearchCLI.Operations
 
         public string LongKey => "--index";
 
+        public string Description => "Index files and folders on available drives.";
+
         public bool SupportsStreaming => true;
 
         public Dictionary<string, string> Arguments { get; } = new();
@@ -22,14 +19,6 @@ namespace FileSearchCLI.Operations
         public Task<OperationResult> ExecuteAsync(CancellationToken ct = default)
         {
             throw new NotImplementedException();
-        }
-
-        public OperationDescription GetDescription()
-        {
-            return new OperationDescription(ShortKey, LongKey, "Indexes files in the specified directory.", new Dictionary<string, string>
-            {
-                {"No arguments","" }
-            });
         }
 
         public async IAsyncEnumerable<OperationResult> StreamAsync([EnumeratorCancellation]CancellationToken ct = default)
@@ -43,9 +32,5 @@ namespace FileSearchCLI.Operations
             // No arguments to set for this operation
         }
 
-        public void Validate()
-        {
-            
-        }
     }
 }

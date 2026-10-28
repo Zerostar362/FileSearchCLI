@@ -1,9 +1,6 @@
 ﻿using FileSearchCLI.Interface;
-using FileSearchCLI.Models;
 using FileSearchCLI.Services;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FileSearchCLI.Operations
 {
@@ -12,6 +9,8 @@ namespace FileSearchCLI.Operations
         public string ShortKey => "-s";
 
         public string LongKey => "--search";
+
+        public string Description => "Search indexed files by name and extension.";
 
         public bool SupportsStreaming => true;
 
@@ -28,14 +27,6 @@ namespace FileSearchCLI.Operations
         public Task<OperationResult> ExecuteAsync(CancellationToken ct = default)
         {
             throw new NotImplementedException();
-        }
-
-        public OperationDescription GetDescription()
-        {
-            return new OperationDescription(ShortKey, LongKey, "Searches for files in the indexed database.", new Dictionary<string, string>
-            {
-                {"-n","name" }, {"--name","name" }, {"-f", "format"}, {"--format", "format" }
-            });
         }
 
         public async IAsyncEnumerable<OperationResult> StreamAsync(CancellationToken ct = default)
@@ -61,9 +52,5 @@ namespace FileSearchCLI.Operations
             }
         }
 
-        public void Validate()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

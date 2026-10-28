@@ -1,15 +1,13 @@
 ﻿using FileSearchCLI.Interface;
 using FileSearchCLI.Operations;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FileSearchCLI.Services.OperationServices
 {
     public class OperationService
     {
-        private Dictionary<string, IOperation> _operations;
-        private SqliteDatabaseService _service;
+        private readonly Dictionary<string, IOperation> _operations;
+        private readonly SqliteDatabaseService _service;
 
         public OperationService(SqliteDatabaseService service)
         {
@@ -34,14 +32,17 @@ namespace FileSearchCLI.Services.OperationServices
             return _operations.TryGetValue(key, out operation);
         }
 
-        private Task LoadOperations()
+        public IReadOnlyCollection<IOperation> GetAvailableOperations()
         {
-            // Load operations from configuration or other sources
-            // For example:
+            return _operations.Values.Distinct().ToArray();
+        }
+
+        private void LoadOperations()
+        {
             AddOperation(new IndexOperation(new IndexerService(_service)));
             AddOperation(new SearchOperation(new SearchService(_service)));
-            //AddOperation("remove-database", new RemoveDatabaseOperation());
-            return Task.CompletedTask;
+            AddOperation(new RemoveDatabaseOperation(_service));
+            AddOperation(new HelpOperation(this));
         }
     }
 }
