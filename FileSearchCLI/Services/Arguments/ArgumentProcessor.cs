@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FileSearchCLI.Interface;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,7 +14,7 @@ namespace FileSearchCLI.Services.Arguments
             _argumentHelper = argumentHelper;
         }
 
-        private ArgumentParseResult? ProcessArgument(
+        private IOperation? ProcessArgument(
         IReadOnlyList<string> args,
         ref int index,
         string argument,

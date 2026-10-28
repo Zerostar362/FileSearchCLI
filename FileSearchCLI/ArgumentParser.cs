@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
+using FileSearchCLI.Interface;
 using FileSearchCLI.Models;
+using FileSearchCLI.Services.OperationServices;
 
 public sealed class SearchOptions
 {
@@ -43,7 +45,7 @@ public sealed class SearchOptions
 }
 
 [Obsolete]
-public sealed class ArgumentParseResultOld
+public sealed class ArgumentParseResult
 {
     public SearchOptions? Options { get; }
     public string? ErrorMessage { get; }
@@ -58,11 +60,51 @@ public sealed class ArgumentParseResultOld
     }
 }
 
-public sealed record ArgumentParseResult(IOperation operation,);
-
 public sealed class ArgumentParser
 {
-    public ArgumentParseResult Parse(IReadOnlyList<string> args)
+    private OperationService _operationService;
+
+    public ArgumentParser(OperationService operationService)
+    {
+        _operationService = operationService;
+    }
+
+    public IOperation Parse(IReadOnlyList<string> args)
+    {
+        var command = args[0];
+
+        var operation = GetOperation(command);
+
+        var arguments = ParseArguments(args.Skip(1).ToList());
+
+        operation.Arguments = arguments;
+
+        return operation;
+    }
+
+    private static Dictionary<string, string> ParseArguments(IReadOnlyList<string> args)
+    {
+        var arguments = new Dictionary<string, string>();
+
+        for (var i = 0; i < args.Count; i++)
+        {
+            var token = args[i];
+
+            if (!token.StartsWith('-'))
+            {
+                throw new ArgumentException($"Expected a flag starting with '-' but found '{token}'.");
+            }
+
+            var hasValue = i + 1 < args.Count && !args[i + 1].StartsWith('-');
+            var value = hasValue ? args[++i] : string.Empty;
+
+            arguments[token] = value;
+        }
+
+        return arguments;
+    }
+
+    /*public ArgumentParseResult Parse(IReadOnlyList<string> args)
     {
         if (args.Count == 0)
         {
@@ -107,6 +149,13 @@ public sealed class ArgumentParser
             removeDatabaseRequested,
             fileNamePattern,
             fileFormats);
+    }*/
+
+    private IOperation GetOperation(string command) 
+    {
+        var (option, inlineValue) = SplitArgument(command);
+        _operationService.TryGetOperation(option, out var operation);
+        return operation;
     }
 
     private ArgumentParseResult? ProcessArgument(

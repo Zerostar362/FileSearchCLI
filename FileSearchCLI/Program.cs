@@ -1,7 +1,22 @@
 ﻿using FileSearchCLI.Services;
+using FileSearchCLI.Services.OperationServices;
 
-var parser = new ArgumentParser();
+var applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+var databasePath = Path.Combine(applicationDataPath, "FileSearchCLI", "FileSearch.db");
+var databaseService = new SqliteDatabaseService(databasePath);
+var operationsService = new OperationService(databaseService);
+var parser = new ArgumentParser(operationsService);
 var result = parser.Parse(args);
+
+if (result == null)
+{
+    Console.Error.WriteLine("Failed to parse arguments.");
+    Environment.ExitCode = 1;
+    return;
+}
+
+result
+
 
 if (result.ShowHelp)
 {

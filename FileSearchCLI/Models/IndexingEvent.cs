@@ -14,4 +14,20 @@ public sealed record IndexingEvent
     {
         Error = error;
     }
+
+    public override string ToString()
+    {
+        if (IndexedFile is not null)
+        {
+            return $"{IndexedFile.Name}";
+        }
+        else if (Error is not null)
+        {
+            return $"{Error.Message}";
+        }
+        else
+        {
+            return "Unknown event";
+        }
+    }
 }
