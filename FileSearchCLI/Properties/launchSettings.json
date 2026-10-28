@@ -2,7 +2,7 @@
   "profiles": {
     "FileSearchCLI": {
       "commandName": "Project",
-      "commandLineArgs": "-s -n Zivotopis -f pdf"
+      "commandLineArgs": "-s -n vypis"
     }
   }
 }

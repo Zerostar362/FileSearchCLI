@@ -11,15 +11,15 @@ namespace FileSearchCLI.Operations
 {
     public class IndexOperation(IndexerService _indexerService) : IOperation
     {
-        public string ShortKey => "i";
+        public string ShortKey => "-i";
 
-        public string LongKey => "index";
+        public string LongKey => "--index";
 
         public bool SupportsStreaming => true;
 
         public Dictionary<string, string> Arguments { get; } = new();
 
-        public Task<OperationResult> ExecuteAsync(Dictionary<string, object> arguments, CancellationToken ct = default)
+        public Task<OperationResult> ExecuteAsync(CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }
@@ -32,10 +32,15 @@ namespace FileSearchCLI.Operations
             });
         }
 
-        public async IAsyncEnumerable<OperationResult> StreamAsync(Dictionary<string, object> arguments, [EnumeratorCancellation]CancellationToken ct = default)
+        public async IAsyncEnumerable<OperationResult> StreamAsync([EnumeratorCancellation]CancellationToken ct = default)
         {
             await foreach (var result in _indexerService.IndexAllDrivesAsync(ct))
                 yield return new OperationResult("Indexing", result.ToString());
+        }
+
+        public void SetArguments(Dictionary<string, string> arguments)
+        {
+            // No arguments to set for this operation
         }
 
         public void Validate()

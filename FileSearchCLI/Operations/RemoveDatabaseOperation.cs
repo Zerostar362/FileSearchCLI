@@ -7,7 +7,7 @@ using System.Text;
 
 namespace FileSearchCLI.Operations
 {
-    public class RemoveDatabaseOperation : IOperation
+    /*public class RemoveDatabaseOperation : IOperation
     {
         public string ShortKey => "r";
 
@@ -51,5 +51,5 @@ namespace FileSearchCLI.Operations
         {
             
         }
-    }
+    }*/
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FileSearchCLI.Services.Arguments
 {
-    public class ArgumentProcessor
+    /*public class ArgumentProcessor
     {
         private readonly ArgumentHelper _argumentHelper;
 
@@ -113,5 +113,5 @@ namespace FileSearchCLI.Services.Arguments
 
             return new ArgumentParseResult(null, $"Unknown argument '{argument}'.", false);
         }
-    }
+    }*/
 }

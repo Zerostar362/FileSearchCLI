@@ -13,8 +13,9 @@ namespace FileSearchCLI.Interface
         public OperationDescription GetDescription();
         public void Validate();
 
-        public IAsyncEnumerable<OperationResult> StreamAsync(Dictionary<string, object> arguments, CancellationToken ct = default);
-        public Task<OperationResult> ExecuteAsync(Dictionary<string, object> arguments, CancellationToken ct = default);
+        public IAsyncEnumerable<OperationResult> StreamAsync(CancellationToken ct = default);
+        public Task<OperationResult> ExecuteAsync(CancellationToken ct = default);
+        public void SetArguments(Dictionary<string, string> arguments);
     }
 
     public record OperationDescription(string ShortKey, string LongKey, string Description, Dictionary<string, string> arguments);

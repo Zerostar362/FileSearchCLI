@@ -9,9 +9,9 @@ namespace FileSearchCLI.Operations
 {
     public class SearchOperation(SearchService _service) : IOperation
     {
-        public string ShortKey => "s";
+        public string ShortKey => "-s";
 
-        public string LongKey => "search";
+        public string LongKey => "--search";
 
         public bool SupportsStreaming => true;
 
@@ -23,7 +23,9 @@ namespace FileSearchCLI.Operations
             };
         }
 
-        public Task<OperationResult> ExecuteAsync(Dictionary<string, object> arguments, CancellationToken ct = default)
+        private Dictionary<string, string> _realArguments = new();
+
+        public Task<OperationResult> ExecuteAsync(CancellationToken ct = default)
         {
             throw new NotImplementedException();
         }
@@ -36,12 +38,27 @@ namespace FileSearchCLI.Operations
             });
         }
 
-        public async IAsyncEnumerable<OperationResult> StreamAsync(Dictionary<string, object> arguments,CancellationToken ct = default)
+        public async IAsyncEnumerable<OperationResult> StreamAsync(CancellationToken ct = default)
         {
-            var name = arguments.ContainsKey("name") ? arguments["name"]?.ToString() : null;
-            var format = arguments.ContainsKey("format") ? arguments["format"]?.ToString() : null;
-            await foreach (var result in _service.SearchAsync(name, [format], ct))
+            var name = _realArguments.ContainsKey("name") ? _realArguments["name"]?.ToString() : null;
+            var format = _realArguments.ContainsKey("format") ? _realArguments["format"]?.ToString() : null;
+            var array = format is not null ? new[] { format } : Array.Empty<string>();
+            await foreach (var result in _service.SearchAsync(name, array, ct))
                 yield return new OperationResult("Search", result.ToString());
+        }
+
+        public void SetArguments(Dictionary<string, string> arguments)
+        {
+            foreach (var arg in arguments)
+            {
+                if (!Arguments.ContainsKey(arg.Key))
+                {
+                    throw new ArgumentException($"Unknown argument '{arg.Key}' for operation '{LongKey}'.");
+                }
+
+                var value = Arguments[arg.Key];
+                _realArguments.Add(value, arg.Value);
+            }
         }
 
         public void Validate()

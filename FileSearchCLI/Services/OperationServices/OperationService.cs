@@ -18,17 +18,15 @@ namespace FileSearchCLI.Services.OperationServices
             LoadOperations();
         }
 
-        public void AddOperation(string key, IOperation operation)
+        public void AddOperation(IOperation operation)
         {
-            if (string.IsNullOrWhiteSpace(key))
+            foreach (var key in new[] { operation.ShortKey, operation.LongKey })
             {
-                throw new ArgumentException("Key cannot be null or whitespace.", nameof(key));
+                if (!string.IsNullOrWhiteSpace(key))
+                {       
+                    _operations[key] = operation;
+                }
             }
-            if (operation == null)
-            {
-                throw new ArgumentNullException(nameof(operation), "Operation cannot be null.");
-            }
-            _operations[key] = operation;
         }
 
         public bool TryGetOperation(string key, out IOperation? operation)
@@ -40,9 +38,9 @@ namespace FileSearchCLI.Services.OperationServices
         {
             // Load operations from configuration or other sources
             // For example:
-            AddOperation("index", new IndexOperation(new IndexerService(_service)));
-            AddOperation("search", new SearchOperation(new SearchService(_service)));
-            AddOperation("remove-database", new RemoveDatabaseOperation());
+            AddOperation(new IndexOperation(new IndexerService(_service)));
+            AddOperation(new SearchOperation(new SearchService(_service)));
+            //AddOperation("remove-database", new RemoveDatabaseOperation());
             return Task.CompletedTask;
         }
     }

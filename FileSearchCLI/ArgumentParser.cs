@@ -77,8 +77,7 @@ public sealed class ArgumentParser
 
         var arguments = ParseArguments(args.Skip(1).ToList());
 
-        operation.Arguments = arguments;
-
+        operation.SetArguments(arguments);
         return operation;
     }
 

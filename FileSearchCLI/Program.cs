@@ -15,10 +15,23 @@ if (result == null)
     return;
 }
 
-result
+if (result.SupportsStreaming)
+{
+    await foreach (var operationResult in result.StreamAsync())
+    {
+        Console.WriteLine($"[{operationResult.Name}]: {operationResult.Result}");
+    }
+    return;
+}
+else
+{
+    var operationResult = await result.ExecuteAsync();
+    Console.WriteLine($"[{operationResult.Name}]: {operationResult.Result}");
+    return;
+}
 
 
-if (result.ShowHelp)
+/*if (result.ShowHelp)
 {
     Console.WriteLine(parser.GetUsage());
     return;
@@ -115,4 +128,4 @@ else
     {
         Console.WriteLine($"    {format}");
     }
-}
+}*/
